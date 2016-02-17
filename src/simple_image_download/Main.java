@@ -10,7 +10,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
@@ -21,11 +20,13 @@ public class Main extends Application {
 			Scene scene = new Scene(borderPane,800,480);
 			OptionBar optionBar = new OptionBar();
 			
-			Database db = new Database(scene);
 			Downloads dl = new Downloads(scene);
+			Database db = new Database(scene, dl);
+			
 			FileView fv = new FileView(scene);
 			
-			db.addFile();
+			db.addFile(); //pre-gen data
+
 			borderPane.setTop(optionBar);
 			borderPane.setLeft(db);
 			borderPane.setRight(dl);

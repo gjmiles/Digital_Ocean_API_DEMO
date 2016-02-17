@@ -30,7 +30,7 @@ public class Data {
     	return fileType.get();
     }
     public void setProgress() {
-    	this.progress.add(0.1);
+    	this.progress.set(0.1);
     }
     public void setStatus(String status) {
     	this.fileStatus.setValue(status);

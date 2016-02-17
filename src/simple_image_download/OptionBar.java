@@ -15,11 +15,13 @@ public class OptionBar extends MenuBar {
 		Menu menuSettings = new Menu("Settings");
 		
 		MenuItem exitItem = new MenuItem("Exit");
-		MenuItem settingsItem = new MenuItem("Items");
+		MenuItem settingsItem = new MenuItem("Download Options");
 	    settingsItem.setOnAction(new EventHandler<ActionEvent>() {
 	            public void handle(ActionEvent t) {
-	            	Popup pop = new Popup();
-	            	pop.popSettings();
+	            	SettingsScene settingsScene = new SettingsScene();
+	            	Popup pop = new Popup("Download Options", settingsScene.getScene());
+	            	pop.show();
+	            	
 	            }
 	    });
 	    exitItem.setOnAction(new EventHandler<ActionEvent>() {
