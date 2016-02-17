@@ -37,7 +37,7 @@ public class SettingsScene {
 
 		FlowPane root = new FlowPane(Orientation.HORIZONTAL, 5, 5);
 		root.setPadding(new Insets(5));
-		this.scene = new Scene(root, 450, 350);
+		this.scene = new Scene(root, 450, 150);
 		final String userDirectoryString = System.getProperty("user.home");
 
 		// directory button
@@ -47,22 +47,13 @@ public class SettingsScene {
 		// Labels needed
 		Label Dsl = new Label("Down speed limit (KB/sec):");
 
-		Label activeDown = new Label("Maximum active download:");
-		activeDown.setPadding(new Insets(5, 20, 0, 0));
-
 		Label Destination = new Label("Destination directory: ");
 		Destination.setPadding(new Insets(5, 20, 0, 0));
-
-		Label scheduleTxt=new Label("Schedule download:");
-		scheduleTxt.setPadding(new Insets(5,20,0,0));
 
 		// Define Textfieds
 		final TextField DestTxt = new TextField();
 		DestTxt.setText(userDirectoryString + "/Downloads");
 		DestTxt.setPrefWidth(220);
-		TextField time=new TextField();
-		time.setText("00:00:00");
-		time.setPrefWidth(150);
 
 		// Hbox for directory
 		HBox hBox = new HBox();
@@ -74,16 +65,6 @@ public class SettingsScene {
 		HBox speedBox = new HBox(8);
 		speedBox.setPrefWidth(350);
 		speedBox.setPadding(new Insets(25, 12, 15, 0));
-
-		// Hbox for max active download
-		HBox limitChoices = new HBox(8);
-		limitChoices.setPrefWidth(350);
-		limitChoices.setPadding(new Insets(0, 12, 5, 0));
-
-		//Hbox for scheduler
-		HBox schedulerBox=new HBox(8);
-		schedulerBox.setPrefWidth(350);
-		schedulerBox.setPadding(new Insets(15,12,5,0));
 
 		// Declaring the spinners
 		Spinner spinnerUp = new Spinner();
@@ -126,14 +107,9 @@ public class SettingsScene {
 		hBox.getChildren().addAll(DestTxt, btnOpenDirectoryChooser);
 		speedBox.getChildren().addAll(Dsl, spinnerUp);
 
-		limitChoices.getChildren().addAll(activeDown, activeDspin);
-		schedulerBox.getChildren().addAll(scheduleTxt,time);
 		// Set the nodes to the root to display
 		root.getChildren().add(hBox);
 		root.getChildren().add(speedBox);
-
-		root.getChildren().add(limitChoices);
-		root.getChildren().add(schedulerBox);
 
 	}
 
