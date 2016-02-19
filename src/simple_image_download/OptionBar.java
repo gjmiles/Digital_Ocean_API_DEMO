@@ -24,6 +24,7 @@ public class OptionBar extends MenuBar {
 	            	
 	            }
 	    });
+	    
 	    exitItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
             	System.exit(0);

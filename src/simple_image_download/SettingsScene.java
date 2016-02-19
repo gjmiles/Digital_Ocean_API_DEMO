@@ -1,13 +1,13 @@
 package downloadManager;
 
 import java.io.File;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -15,8 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.DirectoryChooser;
 
 public class SettingsScene {
@@ -25,12 +23,6 @@ public class SettingsScene {
 
 	public SettingsScene() {
 		createScene();
-		addActions(this.scene);
-	}
-
-	private void addActions(Scene scene2) {
-		// TODO Auto-generated method stub
-
 	}
 
 	private void createScene() {
@@ -50,7 +42,7 @@ public class SettingsScene {
 		Label Destination = new Label("Destination directory: ");
 		Destination.setPadding(new Insets(5, 20, 0, 0));
 
-		// Define Textfieds
+		// Define Textfields
 		final TextField DestTxt = new TextField();
 		DestTxt.setText(userDirectoryString + "/Downloads");
 		DestTxt.setPrefWidth(220);
@@ -72,19 +64,6 @@ public class SettingsScene {
 		spinnerUp.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000));
 		spinnerUp.setEditable(true);
 		spinnerUp.setPrefWidth(75);
-
-		Spinner spinnerD = new Spinner();
-
-		spinnerD.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000));
-		spinnerD.setEditable(true);
-		spinnerD.setPrefWidth(75);
-
-		Spinner activeDspin = new Spinner();
-
-		activeDspin.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000));
-		activeDspin.setEditable(true);
-		activeDspin.setPrefWidth(75);
-
 
 		// Button action, let user choose directory
 		btnOpenDirectoryChooser.setOnAction(new EventHandler<ActionEvent>() {

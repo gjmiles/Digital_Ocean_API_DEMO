@@ -1,17 +1,19 @@
 package downloadManager;
 
+import java.util.Date;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 public class Data {
-	private final SimpleStringProperty fileName;
-    private final SimpleStringProperty fileSize;
-    private final SimpleStringProperty fileType;
-    private final DoubleProperty progress;
-    private final SimpleStringProperty fileStatus;
+	private SimpleStringProperty fileName;
+    private SimpleStringProperty fileSize;
+    private SimpleStringProperty fileType;
+    private DoubleProperty progress;
+    private SimpleStringProperty fileStatus;
+    private Boolean waiting = false;
+    private Date scheduledDate;
     
     public Data(String fileName, String fileSize, String fileType) {
     	this.fileName = new SimpleStringProperty(fileName);
@@ -19,6 +21,7 @@ public class Data {
     	this.fileType = new SimpleStringProperty(fileType);
     	this.progress = new SimpleDoubleProperty(0.0);
     	this.fileStatus = new SimpleStringProperty("Downloading");
+    	this.scheduledDate = new Date();
     }
     public String getFileName() {
     	return fileName.get();
@@ -38,5 +41,30 @@ public class Data {
     public String getFileStatus() {
     	return fileStatus.get();
     }
-
+    public Boolean isWaiting() {
+    	return waiting;
+    }
+    public void toggleWaiting() {
+    	if(waiting == true) {
+    		waiting = false;
+    		this.fileStatus.set("Downloading");
+    	}
+    	else {
+    		waiting = true;
+    	}
+    }
+    public Date getScheduledDate() {
+    	return scheduledDate;
+    }
+    public void setDate(Date date) {
+    	this.scheduledDate = date;
+    	this.fileStatus.set("Start at "+ getScheduledDate());
+    }
+    public void startDownload() {
+    	this.toggleWaiting();
+    }
+	public void stopDownload() {
+		this.fileStatus.set("Stopped");
+		
+	}
 }
