@@ -109,6 +109,7 @@ public class Downloads extends VBox{
 	}
 	public void startDownload(Data item) {
 		item.setStatus("Downloading");
+		//Add start download stuff here
 	}
 	public void checkQueue() {
 		for(int i = 0; i < downloadsList.size(); i++) {
