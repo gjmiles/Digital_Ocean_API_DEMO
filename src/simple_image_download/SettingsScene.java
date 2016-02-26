@@ -9,8 +9,6 @@ import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -51,19 +49,6 @@ public class SettingsScene {
 		HBox hBox = new HBox();
 		hBox.setPrefWidth(450);
 		hBox.setPadding(new Insets(10, 0, 0, 0));
-		// hBox.setStyle("-fx-background-color: BLACK;");
-
-		// Hbox for the download speed limit
-		HBox speedBox = new HBox(8);
-		speedBox.setPrefWidth(350);
-		speedBox.setPadding(new Insets(25, 12, 15, 0));
-
-		// Declaring the spinners
-		Spinner spinnerUp = new Spinner();
-
-		spinnerUp.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000));
-		spinnerUp.setEditable(true);
-		spinnerUp.setPrefWidth(75);
 
 		// Button action, let user choose directory
 		btnOpenDirectoryChooser.setOnAction(new EventHandler<ActionEvent>() {
@@ -84,12 +69,9 @@ public class SettingsScene {
 		// add each node respectively
 		hBox.getChildren().add(Destination);
 		hBox.getChildren().addAll(DestTxt, btnOpenDirectoryChooser);
-		speedBox.getChildren().addAll(Dsl, spinnerUp);
 
 		// Set the nodes to the root to display
 		root.getChildren().add(hBox);
-		root.getChildren().add(speedBox);
-
 	}
 
 	public Scene getScene() {

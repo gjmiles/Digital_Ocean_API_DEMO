@@ -41,7 +41,7 @@ public class ScheduleScene {
 		//Submit button
 		Button submitBtn = new Button("Submit");
 
-		// Labels needed
+		// Labels
 		Label dateLabel = new Label("Date: ");
 		Label timeLabel = new Label("Time: ");
 		Label timeColon = new Label(" : ");
@@ -56,16 +56,19 @@ public class ScheduleScene {
 		hBoxTime.setPrefWidth(450);
 		hBoxTime.setPadding(new Insets(10, 0, 0, 0));
 		
+		// Hbox for the button
 		HBox hBoxBtn = new HBox();
 		hBoxBtn.setPrefWidth(450);
 		hBoxBtn.setPadding(new Insets(10, 0, 0, 50));
 		
+		// Date picking field
 		final DatePicker datePicker = new DatePicker();
 	    datePicker.setEditable( false );
 	    datePicker.setFocusTraversable( false );
-	    datePicker.setPromptText( "Select date" );
+	    datePicker.setValue(LocalDate.now());
 	    datePicker.setPrefWidth(170);
-
+	    
+	    //Combo box for time(hr and min). Using 24 hr clock
 		final ComboBox comboHr;
 		final ComboBox comboMin;
 		
@@ -80,6 +83,7 @@ public class ScheduleScene {
 		}
 		comboHr = new ComboBox(hrs);
 		comboHr.setEditable(false);
+		comboHr.setValue(new Date().getHours());
 		comboHr.setPrefWidth(75);
 		
 		ObservableList<String> mins = FXCollections.observableArrayList();
@@ -93,6 +97,7 @@ public class ScheduleScene {
 		}
 		comboMin = new ComboBox(mins);
 		comboMin.setEditable(false);
+		comboMin.setValue(new Date().getMinutes());
 		comboMin.setPrefWidth(75);
 
 		submitBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -105,12 +110,12 @@ public class ScheduleScene {
 				Date dt = new Date();
 				
 				try {
-					dt = df.parse(date + " " + time);
+					dt = df.parse(date+" "+time);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 				item.setDate(dt);
-				item.toggleWaiting();
+				item.setWaiting(true);
 		    	dl.sendToDownloads(item);
 				getScene().getWindow().hide();
 			}
