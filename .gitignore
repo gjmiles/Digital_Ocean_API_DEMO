@@ -88,3 +88,5 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties./servlet/src/main/webapp/geoimages/Apollo15_PanCam_Mosaic_28N307E_1mp.tif
 ./servlet/build/libs/servlet.war
+
+servlet/src/main/webapp/geoimages/*
