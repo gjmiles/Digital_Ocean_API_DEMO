@@ -89,4 +89,4 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties./servlet/src/main/webapp/geoimages/Apollo15_PanCam_Mosaic_28N307E_1mp.tif
 ./servlet/build/libs/servlet.war
 
-servlet/src/main/webapp/geoimages/*
+#servlet/src/main/webapp/geoimages/*
