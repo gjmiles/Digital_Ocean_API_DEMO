@@ -59,32 +59,32 @@ public class sample_retriever extends HttpServlet {
 			buf = ByteBuffer.allocate(2048);
 			long offset = 0;
 			while(offset <= file_size)
-			{
+			    {
 
 
 				int length = 0;
 				if((file_size - offset) < 2048)
-				{
+				    {
 					System.out.println((file_size - offset));
 					buf = ByteBuffer.allocate((int) (file_size - offset));
-				}
-
+				    }
 
 				while(in.read(buf, offset) > 0)
-				{
+				    {
 					buf.flip();
 					while(buf.hasRemaining())
-					{
+					    {
 						//readFileBinary(buf,fileName);
 						//outStream.write(buf.get());
 						outStream.write(buf.get());
-					}
+					    }
 					//file_left++;
 					//}
-				}
+				    }
+
 				buf.rewind();
 				offset += 2048;
-			}
+			    }
 			
 			//Overshot
 			/*

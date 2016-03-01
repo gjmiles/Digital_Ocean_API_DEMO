@@ -90,3 +90,6 @@ gradle-app.setting
 ./servlet/build/libs/servlet.war
 
 #servlet/src/main/webapp/geoimages/*
+
+#Ignore gradle.properties
+client/gradle.properties

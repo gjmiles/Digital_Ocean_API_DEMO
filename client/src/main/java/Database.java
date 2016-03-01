@@ -1,6 +1,11 @@
 package downloadManager;
 
+import java.util.ArrayList;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -23,12 +28,14 @@ import javafx.scene.layout.VBox;
 public class Database extends VBox {
 	private Scene scene;
 	private TextField filterField;
-	TableView<Data> tv;
-	ObservableList<Data> list;
+	private TableView<Data> tv;
+	private ObservableList<Data> list;
+	private ObservableList<Data> filteredList;
 	Downloads dl;
 	public Database(Scene scene, Downloads dl) {
 		tv = new TableView();
 		list = FXCollections.observableArrayList();
+		filteredList = FXCollections.observableArrayList();
 		filterField = new TextField();
 		createBrowseView();
 		this.scene = scene;
@@ -110,32 +117,21 @@ public class Database extends VBox {
 		    	pop.show();
 			}
 		});
-		FilteredList<Data> filteredData = new FilteredList<Data>(list, p -> true);
 		
-		filterField.textProperty().addListener((observable, oldValue, newValue) -> {
-			filteredData.setPredicate(item -> {
-				if (newValue == null || newValue.isEmpty()) {
-					return true;
+		tv.setItems(filteredList);
+		filterField.textProperty().addListener(new ChangeListener<String>() {
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				filteredList.clear();
+				for(Data d : list) {
+					if(matches(d)) {
+						filteredList.add(d);
+					}
 				}
-				String lowerCaseFilter = newValue.toLowerCase();
-				
-				if (item.getFileName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
-					return true;
-				} 
-				else if (item.getFileSize().toLowerCase().indexOf(lowerCaseFilter) != -1) {
-					return true;
-				} 
-				else if (item.getFileType().toLowerCase().indexOf(lowerCaseFilter) != -1) {
-					return true;
-				}
-				return false;
-			    });
-		    });
-		
-		SortedList<Data> sortedData = new SortedList<>(filteredData);
-		sortedData.comparatorProperty().bind(tv.comparatorProperty());
-		
-		tv.setItems(sortedData);
+				ArrayList<TableColumn<Data, ?>> order = new ArrayList<>(tv.getSortOrder());
+		        tv.getSortOrder().clear();
+		        tv.getSortOrder().addAll(order);
+			}
+		});
 		tv.setContextMenu(new ContextMenu(downloadItem,downloadLaterItem));
 		tv.getColumns().addAll(fileNameCol, fileSizeCol, fileTypeCol, fileDateCol);
 		
@@ -146,6 +142,26 @@ public class Database extends VBox {
 		this.getChildren().addAll(hBox, tv);
 	}
 	
+	public Boolean matches(Data d) {
+		String filterInput = filterField.getText();
+		String lowerCaseFilter = filterInput.toLowerCase();
+		if(filterInput == null || filterInput.isEmpty()) {
+			return true;
+		}	
+		if (d.getFileName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+			return true;
+		} 
+		else if (d.getFileSize().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+			return true;
+		} 
+		else if (d.getFileType().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+			return true;
+		}
+		else if (d.getFileDate().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+			return true;
+		}
+		return false;
+	}
 	public void addFile() {
 		Data test = new Data("testFileName", "100MB", "png", "01-01-2016");
 		Data test2 = new Data("testFileName2", "200MB", "png", "01-01-2016");
@@ -155,5 +171,6 @@ public class Database extends VBox {
 		Data test6 = new Data("pluto", "10MB", "jpg","05-20-2012");
 		Data test7 = new Data("textFile", "1KB", "txt","06-10-2011");
 		list.addAll(test,test2,test3,test4,test5,test6,test7);
+		filteredList.addAll(list);
 	}
 }
