@@ -61,7 +61,6 @@ public class sample_retriever extends HttpServlet {
 			while(offset <= file_size)
 			    {
 
-
 				int length = 0;
 				if((file_size - offset) < 2048)
 				    {

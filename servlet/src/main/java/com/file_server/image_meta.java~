@@ -1,0 +1,8 @@
+
+
+
+
+public class image_meta {
+    private String file_name;
+    private long file_size;
+}

@@ -2,11 +2,14 @@ apply plugin: 'java'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'jetty'
 
+
 repositories {
   mavenCentral()
 }
 
 dependencies {
+    compile 'org.codehaus.jackson:jackson-mapper-asl:1.7.7'
+    compile 'org.codehaus.jackson:jackson-core-asl:1.8.5'
     providedCompile "javax.servlet:javax.servlet-api:3.0.1"
     runtime 'javax.servlet:jstl:1.1.2'
 }
