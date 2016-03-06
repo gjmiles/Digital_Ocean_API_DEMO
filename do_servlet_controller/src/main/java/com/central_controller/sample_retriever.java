@@ -227,6 +227,7 @@ public class sample_retriever extends HttpServlet {
 	    
 	    String myip = "104.131.152.196";
 	    String current_ip = "";
+	    String current_link = "";
 
 	    for(String ip : droplet_ips)
 		{
@@ -234,6 +235,9 @@ public class sample_retriever extends HttpServlet {
 			current_ip = ip;
 		}
 	    //System.out.println("Iterating Over Results");
+	    
+	    current_link = "http://" + current_ip + ":8080/servlet/GetImageServlet?name=";
+
 	    while(resultSet.next() )
 		{
 		    media.add(new image_meta(
@@ -242,7 +246,7 @@ public class sample_retriever extends HttpServlet {
 					    resultSet.getString("Filetype"),
 					    resultSet.getLong("FileSize"),
 					    resultSet.getString("DateAdded"),
-					    current_ip//resultSet.getString("Link")
+					    current_link + resultSet.getString("Filename") + "." + resultSet.getString("Filetype")//resultSet.getString("Link")
 					     ));
 		}
 	    

@@ -12,10 +12,12 @@ public class MetaSerializer extends JsonSerializer<image_meta> {
     public void serialize(image_meta meta, JsonGenerator jsonGenerator,
 			  SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("id", meta.getFileid());
         jsonGenerator.writeStringField("filename", meta.getFilename());
         jsonGenerator.writeStringField("filetype", meta.getFileType());
         jsonGenerator.writeNumberField("filesize", meta.getFileSize());
         jsonGenerator.writeStringField("filedate", meta.getFileDate());
+        jsonGenerator.writeStringField("link", meta.getFileLink());
         jsonGenerator.writeEndObject();
     }
 }

@@ -46,14 +46,21 @@ public class meta_data_handler {
 
 	int last_count = metas.size();
 	int this_count = 0;	
+	if(last_count > 1)
+	    total_response = "[";
 	try
 	    {
 
 		for(image_meta meta : metas)
 		    {
-			this_count++;
+			this_count++;		       
 			if(this_count == last_count)
-			    total_response += getJsonString(meta);
+			    {
+			    if(last_count > 1)				
+				total_response += getJsonString(meta) + "]";
+			    else
+				total_response += getJsonString(meta);
+			    }
 			else
 			    total_response += getJsonString(meta) + ", ";
 		    }
