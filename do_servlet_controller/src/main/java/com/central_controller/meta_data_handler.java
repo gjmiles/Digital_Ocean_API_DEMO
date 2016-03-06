@@ -2,6 +2,7 @@ package com.central_controller;
 
 import com.central_controller.image_meta;
 import com.central_controller.MetaSerializer;
+import java.util.ArrayList;
 
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonFactory;
@@ -38,6 +39,28 @@ public class meta_data_handler {
     public void get_meta(){
 	//GET DATA FROM SQL SERVER FOR META DATA
 
+    }
+
+    public String buildAllJSONresponse(ArrayList<image_meta> metas){
+	String total_response = "";
+
+	int last_count = metas.size();
+	int this_count = 0;	
+	try
+	    {
+
+		for(image_meta meta : metas)
+		    {
+			this_count++;
+			if(this_count == last_count)
+			    total_response += getJsonString(meta);
+			else
+			    total_response += getJsonString(meta) + ", ";
+		    }
+	    } catch(IOException e)
+	    {
+	    }
+	return total_response;
     }
 
     public String getJsonString(image_meta toString) throws IOException {

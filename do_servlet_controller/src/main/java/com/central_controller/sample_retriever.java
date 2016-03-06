@@ -55,7 +55,6 @@ import javax.servlet.http.HttpServletResponse;
 //@WebServlet("/GetImageServlet")
 public class sample_retriever extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    
 	
 	public void init() throws ServletException {
 	    String authToken = "6dac67db52ec605114cea4de81fd3cb6629556f3e57a8021ade1c6db80765bb6";
@@ -97,10 +96,13 @@ public class sample_retriever extends HttpServlet {
 
 		if(request.getParameter("all") != null)
 		    {
+			//For demo do this every request but probably this does not need to be done so often.
 			fillMedia(request, media);
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
+			meta_data_handler handler = new meta_data_handler();
 			//json_response = json_string_out(media);
+			json_response = handler.buildAllJSONresponse(media);
 			out.print(json_response);
 		    }
 		else if(request.getParameter("search") != null)
@@ -108,7 +110,9 @@ public class sample_retriever extends HttpServlet {
 			searchMedia(request, media, request.getParameter("search"));
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
+			meta_data_handler handler = new meta_data_handler();
 			//json_response = json_string_out(media);
+			//json_response = handler.buildAllJSONresponse((ArrayList<image_meta>)context.getAttribute("image_meta"));
 			out.print(json_response);
 		    }
 		else
@@ -122,6 +126,7 @@ public class sample_retriever extends HttpServlet {
 	}
 
 
+    //This one is if an API call comes in for a specific item.
     protected void searchMedia(HttpServletRequest request, ArrayList<image_meta> media, String search)
     {
 	String username = "python_user";
@@ -163,7 +168,7 @@ public class sample_retriever extends HttpServlet {
 					    resultSet.getString("Filetype"),
 					    resultSet.getLong("FileSize"),
 					    resultSet.getString("DateAdded"),
-					    resultSet.getString("Link")
+					    resultSet.getString("Link") // GET RID OF THIS AND GET IT FROM LIST OF IPS INSTEAD
 					    ));
 		}
 	    
