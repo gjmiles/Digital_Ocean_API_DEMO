@@ -22,7 +22,7 @@ public class meta_data_handler {
 	
 	mapper = new ObjectMapper();
 	mod = new SimpleModule("MyModule", new Version(1, 0, 0, null));
-	mod.addSerializer(new MetaSerializer());
+	//mod.addSerializer(new MetaSerializer());
 	mapper.registerModule(mod);
     }
 

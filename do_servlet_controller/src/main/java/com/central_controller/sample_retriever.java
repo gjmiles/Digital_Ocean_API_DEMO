@@ -52,7 +52,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//@WebServlet("/GetImageServlet")
+//@WebServlet("/controller")
 public class sample_retriever extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -93,11 +93,13 @@ public class sample_retriever extends HttpServlet {
 		countDown decrement = new countDown(context);
 		Timer timer = new Timer();
 		timer.schedule(decrement,10);
-
+		//System.out.println("ENTERING SERVLET!");
+		
 		if(request.getParameter("all") != null)
 		    {
+			//System.out.println("IN ALL!");
 			//For demo do this every request but probably this does not need to be done so often.
-			fillMedia(request, media);
+			fillMedia(context, media);
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
 			meta_data_handler handler = new meta_data_handler();
@@ -107,7 +109,7 @@ public class sample_retriever extends HttpServlet {
 		    }
 		else if(request.getParameter("search") != null)
 		    {
-			searchMedia(request, media, request.getParameter("search"));
+			searchMedia(context, media, request.getParameter("search"));
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
 			meta_data_handler handler = new meta_data_handler();
@@ -127,7 +129,7 @@ public class sample_retriever extends HttpServlet {
 
 
     //This one is if an API call comes in for a specific item.
-    protected void searchMedia(HttpServletRequest request, ArrayList<image_meta> media, String search)
+    protected void searchMedia(ServletContext context, ArrayList<image_meta> media, String search)
     {
 	String username = "python_user";
 	String password = "no_password";
@@ -157,8 +159,17 @@ public class sample_retriever extends HttpServlet {
 
 	    //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");	    
 	    System.out.println(query);
-
+	    ArrayList<String> droplet_ips = (ArrayList<String>)context.getAttribute("droplet_ips");
 	    //System.out.println("Iterating Over Results");
+
+	    String myip = "104.131.152.196";
+	    String current_ip = "";
+
+	    for(String ip : droplet_ips)
+		{
+		    if(ip != myip)
+			current_ip = ip;
+		}
 
 	    while(resultSet.next() )
 		{
@@ -168,8 +179,8 @@ public class sample_retriever extends HttpServlet {
 					    resultSet.getString("Filetype"),
 					    resultSet.getLong("FileSize"),
 					    resultSet.getString("DateAdded"),
-					    resultSet.getString("Link") // GET RID OF THIS AND GET IT FROM LIST OF IPS INSTEAD
-					    ));
+					    current_ip //resultSet.getString("Link") // GET RID OF THIS AND GET IT FROM LIST OF IPS INSTEAD
+					     ));
 		}
 	    
 	    // Tidy Up
@@ -183,7 +194,7 @@ public class sample_retriever extends HttpServlet {
 	
     }
 
-    protected void fillMedia(HttpServletRequest request, ArrayList<image_meta> media)
+    protected void fillMedia(ServletContext context, ArrayList<image_meta> media)
     {
 	String username = "python_user";
 	String password = "no_password";
@@ -210,8 +221,18 @@ public class sample_retriever extends HttpServlet {
 	    
 	    // Query the database for all Shops
 	    ResultSet resultSet = statement.executeQuery(query);
+
+	    System.out.println(query);
+	    ArrayList<String> droplet_ips = (ArrayList<String>)context.getAttribute("droplet_ips");
 	    
-	    
+	    String myip = "104.131.152.196";
+	    String current_ip = "";
+
+	    for(String ip : droplet_ips)
+		{
+		    if(ip != myip)
+			current_ip = ip;
+		}
 	    //System.out.println("Iterating Over Results");
 	    while(resultSet.next() )
 		{
@@ -221,8 +242,8 @@ public class sample_retriever extends HttpServlet {
 					    resultSet.getString("Filetype"),
 					    resultSet.getLong("FileSize"),
 					    resultSet.getString("DateAdded"),
-					    resultSet.getString("Link")
-					    ));
+					    current_ip//resultSet.getString("Link")
+					     ));
 		}
 	    
 	    // Tidy Up
