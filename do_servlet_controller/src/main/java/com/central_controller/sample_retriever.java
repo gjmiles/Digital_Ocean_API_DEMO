@@ -52,6 +52,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 //@WebServlet("/controller")
 public class sample_retriever extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -60,6 +63,8 @@ public class sample_retriever extends HttpServlet {
 	    String authToken = "6dac67db52ec605114cea4de81fd3cb6629556f3e57a8021ade1c6db80765bb6";
 
 	    DigitalOcean apiClient = new DigitalOceanClient(authToken);
+	    
+	    ArrayList<String> droplet_ips = new ArrayList<String>();
 
 	    if ( this.getServletContext().getAttribute("drop_api") == null)
 		{
@@ -74,7 +79,6 @@ public class sample_retriever extends HttpServlet {
 
 	    if ( this.getServletContext().getAttribute("droplet_ips") == null)
 		{
-		    ArrayList<String> droplet_ips = new ArrayList<String>();
 		    droplet_ips = GetDropletIPs(apiClient);
 		    this.getServletContext().setAttribute("droplet_ips", droplet_ips);
 		}
@@ -82,6 +86,29 @@ public class sample_retriever extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext context = this.getServletContext();
+
+		//Need to do this inside GET request
+	    if ( context.getAttribute("current_ip") == null)
+		{		    
+		    String my_ip = request.getLocalAddr();
+		    ArrayList<String> droplet_ips = (ArrayList<String>)context.getAttribute("droplet_ips");
+		    int index = droplet_ips.indexOf(my_ip);
+		    //For arbitration schemes we don't want the servlet controller ip mixed up with
+		    //file handler ips.
+		    System.out.println(index);
+		    droplet_ips.remove(index);
+
+		    //This is the ip to start the round robin
+		    String current_ip = droplet_ips.get(0);
+		    //else
+		    //	newDroplet();
+
+		    context.setAttribute("current_ip", current_ip);
+		    context.setAttribute("current_ip_index", 0);
+		    context.setAttribute("droplet_ips", droplet_ips);
+		}
+
+		System.out.println(request.getLocalAddr());
 
 		ArrayList<image_meta> media = new ArrayList<image_meta>();
 		String json_response = "";
@@ -92,7 +119,7 @@ public class sample_retriever extends HttpServlet {
 
 		countDown decrement = new countDown(context);
 		Timer timer = new Timer();
-		timer.schedule(decrement,10);
+		timer.schedule(decrement,20000);
 		//System.out.println("ENTERING SERVLET!");
 		
 		if(request.getParameter("all") != null)
@@ -226,14 +253,15 @@ public class sample_retriever extends HttpServlet {
 	    ArrayList<String> droplet_ips = (ArrayList<String>)context.getAttribute("droplet_ips");
 	    
 	    String myip = "104.131.152.196";
-	    String current_ip = "";
+	    String current_ip =  (String)context.getAttribute("current_ip");
 	    String current_link = "";
-
+	    /*
 	    for(String ip : droplet_ips)
 		{
 		    if(ip != myip)
 			current_ip = ip;
 		}
+	    */
 	    //System.out.println("Iterating Over Results");
 	    
 	    current_link = "http://" + current_ip + ":8080/servlet/GetImageServlet?name=";
@@ -270,6 +298,7 @@ public class sample_retriever extends HttpServlet {
     {	
 	Integer pageNo = 1;
 	Integer perPage = 1;
+
 	ArrayList<String> ip_addrs = new ArrayList<String>();	
 	try{
 	    Droplets droplets = apiClient.getAvailableDroplets(pageNo, null);
@@ -279,7 +308,7 @@ public class sample_retriever extends HttpServlet {
 		    for(Network net : drop.getNetworks().getVersion4Networks())
 			{
 			    ip_addrs.add(net.getIpAddress());
-			    System.out.println(net.getIpAddress());
+			    //System.out.println(net.getIpAddress());
 			}
 		}
 
