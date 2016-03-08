@@ -2,6 +2,7 @@ package com.central_controller;
 
 import com.central_controller.image_meta;
 import com.central_controller.countDown;
+import com.central_controller.dropletHandler;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -60,15 +61,29 @@ public class sample_retriever extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	public void init() throws ServletException {
-	    String authToken = "6dac67db52ec605114cea4de81fd3cb6629556f3e57a8021ade1c6db80765bb6";
+	    String authToken = "e75e5f65d1521f9334d37dab29343c7da877ff80fdd9388215335ab9d9a54187";
 
-	    DigitalOcean apiClient = new DigitalOceanClient(authToken);
+	    //DigitalOcean apiClient = new DigitalOceanClient(authToken);
+	    dropletHandler dropHand = new dropletHandler(authToken);
 	    
+		
 	    ArrayList<String> droplet_ips = new ArrayList<String>();
+	    ArrayList<Droplet> new_droplets = new ArrayList<Droplet>();
 
 	    if ( this.getServletContext().getAttribute("drop_api") == null)
 		{
-		    this.getServletContext().setAttribute("drop_api", apiClient);
+		    //this.getServletContext().setAttribute("drop_api", apiClient);
+		    this.getServletContext().setAttribute("drop_api", dropHand);
+		}
+
+	    if( this.getServletContext().getAttribute("newdrops") == null )
+		{
+		    this.getServletContext().setAttribute("newdrops", new_droplets);
+		}
+
+	    if( this.getServletContext().getAttribute("base_servers") == null )
+		{
+		    this.getServletContext().setAttribute("base_servers", 2);
 		}
 
 	    if ( this.getServletContext().getAttribute("load_counter") == null)
@@ -76,22 +91,29 @@ public class sample_retriever extends HttpServlet {
 		    Integer counter = 0;
 		    this.getServletContext().setAttribute("load_counter", counter);
 		}
-
+	    
 	    if ( this.getServletContext().getAttribute("droplet_ips") == null)
 		{
-		    droplet_ips = GetDropletIPs(apiClient);
+		    //droplet_ips = GetDropletIPs(apiClient);
+		    droplet_ips = dropHand.GetDropletIPs();
 		    this.getServletContext().setAttribute("droplet_ips", droplet_ips);
 		}
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ServletContext context = this.getServletContext();
+		
+		String auth_header = request.getHeader("Authorization");
+		String  content_type = request.getHeader("Content-Type");
+		Integer base_serv = (Integer)context.getAttribute("base_servers");
+		ArrayList<String> droplet_ips = (ArrayList<String>)context.getAttribute("droplet_ips");
 
+		if(auth_header != null && content_type != null)
+		    System.out.println("HEADERS: " + auth_header + ", " + content_type);
 		//Need to do this inside GET request
 	    if ( context.getAttribute("current_ip") == null)
 		{		    
 		    String my_ip = request.getLocalAddr();
-		    ArrayList<String> droplet_ips = (ArrayList<String>)context.getAttribute("droplet_ips");
 		    int index = droplet_ips.indexOf(my_ip);
 		    //For arbitration schemes we don't want the servlet controller ip mixed up with
 		    //file handler ips.
@@ -120,6 +142,41 @@ public class sample_retriever extends HttpServlet {
 		countDown decrement = new countDown(context);
 		Timer timer = new Timer();
 		timer.schedule(decrement,20000);
+
+		//Just for Demo purposes obviously better ways to do this.
+		if( counter == 0 && (base_serv < droplet_ips.size()) )
+		    {
+			String ip_del = "";
+			String check_ip = "";
+			String new_ip = "";
+			dropletHandler dropHandler = (dropletHandler)context.getAttribute("drop_api");
+
+			ip_del = dropHandler.destroyFileServer();
+			droplet_ips.remove(ip_del);
+
+			check_ip = (String)context.getAttribute("current_ip");
+
+			if(ip_del.equals(check_ip))
+			    {
+				new_ip = droplet_ips.get(0);
+				context.setAttribute("current_ip", new_ip);
+			    }
+
+			context.setAttribute("droplet_ips", droplet_ips);
+		    }
+
+		//Just for Demo purposes obviously better ways to do this.
+		if(counter > 20)
+		    {
+			System.out.println("Spinning new droplet!");
+			dropletHandler dropHandler = (dropletHandler)context.getAttribute("drop_api");
+			dropHandler.CreateFileServer();
+			context.setAttribute("newdrops", dropHandler.getNewDroplets());
+			counter = counter - 5;
+			context.setAttribute("load_counter",counter);
+		    }
+		
+
 		//System.out.println("ENTERING SERVLET!");
 		
 		if(request.getParameter("all") != null)
@@ -294,6 +351,7 @@ public class sample_retriever extends HttpServlet {
 	//Make new droplet and remove droplet after a specified time (Or load goes down on servlet).
     }
 
+    /*//Move to seperate class
     protected ArrayList<String> GetDropletIPs(DigitalOcean apiClient)
     {	
 	Integer pageNo = 1;
@@ -322,6 +380,7 @@ public class sample_retriever extends HttpServlet {
 
 	return ip_addrs;
     }
+    */
 
 	protected void readInStaticHTML(String pathIn, PrintWriter out)
 	{
