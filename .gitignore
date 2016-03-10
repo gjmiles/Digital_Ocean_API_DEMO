@@ -1,0 +1,26 @@
+*target*
+*.jar
+*.war
+*.ear
+*.class
+
+.metadata
+.settings/
+.classpath
+local.properties
+*.launch
+.loadpath
+bin/
+tmp/
+*~
+
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+
+# External tool builders
+.externalToolBuilders/
