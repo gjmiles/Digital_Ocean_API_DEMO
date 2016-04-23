@@ -3,6 +3,8 @@
 Basic download functionality, requests JSON metadata from a server,
 then populates file listing based on metadata recieved from server.
 
+Uses Digital Ocean API and requires Digital Ocean account.
+
 Files can then be selected for download, part of metadata indicates location
 of file.
 
